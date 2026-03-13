@@ -193,7 +193,23 @@ select option{background:var(--surface2);}
 
 <!-- TAB 新增費用 -->
 <div class="page active" id="tab-add">
- <div class="card">
+
+  <div class="setup-card" id="setup-card">
+    <h3>🔥 第一步：設定 Firebase 資料庫網址</h3>
+    <p>請先完成以下設定，再開始使用：</p>
+    <p>
+      1. 前往 <a href="https://console.firebase.google.com" target="_blank" style="color:#60a5fa">Firebase Console</a> → 建立新專案<br>
+      2. 左側點「Realtime Database」→「建立資料庫」→ 選<code>測試模式</code><br>
+      3. 複製資料庫網址（格式：<code>https://你的專案-default-rtdb.firebaseio.com</code>）<br>
+      4. 貼到下方後儲存，即可開始使用（所有人即時同步）
+    </p>
+    <div class="setup-input">
+      <input type="text" id="fb-url-input" placeholder="https://你的專案-default-rtdb.firebaseio.com">
+      <button onclick="saveFirebaseUrl()">儲存</button>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-header">
       <h2>新增一筆費用</h2>
       <span class="sync-badge" id="sync-badge" style="display:none"><span class="sync-dot"></span>即時同步中</span>
