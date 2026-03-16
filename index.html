@@ -117,9 +117,39 @@ select option{background:var(--surface2);}
 .rec-title{font-size:14px;font-weight:500;margin-bottom:3px;}
 .rec-meta{font-size:12px;color:var(--text3);}
 .rec-amount{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.rec-edit{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;
+  padding:4px;border-radius:4px;transition:color .15s,background .15s;flex-shrink:0;align-self:center;}
+.rec-edit:hover{color:var(--accent);background:rgba(245,166,35,.1);}
 .rec-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;
   padding:4px;border-radius:4px;transition:color .15s,background .15s;flex-shrink:0;align-self:center;}
 .rec-del:hover{color:var(--red);background:rgba(248,113,113,.1);}
+.rec-edit{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;
+  padding:4px;border-radius:4px;transition:color .15s,background .15s;flex-shrink:0;align-self:center;margin-right:2px;}
+.rec-edit:hover{color:var(--accent);background:rgba(245,166,35,.1);}
+
+/* ── 編輯 Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
+  transform:translateY(20px);transition:transform .2s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:15px;font-weight:600;}
+.modal-close{background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:20px;line-height:1;padding:0;transition:color .15s;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:16px 20px;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.btn-save{flex:1;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0d0f14;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;touch-action:manipulation;}
+.btn-cancel{background:var(--surface2);color:var(--text2);border:1px solid var(--border);
+  border-radius:8px;padding:11px 20px;font-size:14px;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;touch-action:manipulation;}
 
 .empty-state{padding:48px 24px;text-align:center;color:var(--text3);font-size:14px;}
 .empty-state .icon{font-size:36px;margin-bottom:12px;}
@@ -165,6 +195,29 @@ select option{background:var(--surface2);}
   padding:12px 20px;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.4);
   transition:transform .3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── 編輯 Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:15px;font-weight:600;}
+.modal-close{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;
+  padding:4px;line-height:1;-webkit-tap-highlight-color:transparent;}
+.modal-body{padding:16px 20px;}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.btn-save{flex:1;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#0d0f14;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent;}
+.btn-cancel{flex:1;background:var(--surface2);color:var(--text2);border:1px solid var(--border);
+  border-radius:8px;padding:11px;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent;}
+.edit-members-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+@media(max-width:400px){.edit-members-grid{grid-template-columns:repeat(3,1fr);}}
 </style>
 </head>
 <body>
@@ -263,6 +316,43 @@ select option{background:var(--surface2);}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- 編輯 Modal -->
+<div class="modal-overlay" id="edit-modal" onclick="closeEditIfOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>✏️ 編輯費用</h3>
+      <button class="modal-close" onclick="closeEdit()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>付款人員</label>
+        <select id="edit-payer"></select>
+      </div>
+      <div class="form-group">
+        <label>品項名稱</label>
+        <input type="text" id="edit-item-name">
+      </div>
+      <div class="form-group">
+        <label>金額（NT$）</label>
+        <input type="number" id="edit-amount" min="0" step="1">
+      </div>
+      <div class="form-group">
+        <label>分擔人員</label>
+        <div class="chip-actions">
+          <button class="chip-btn" onclick="editSelectAll()">✓ 全選</button>
+          <button class="chip-btn" onclick="editClearAll()">✕ 清除</button>
+        </div>
+        <div class="edit-members-grid" id="edit-members-grid"></div>
+      </div>
+      <div class="split-preview" id="edit-split-preview">選擇分擔人員後，將顯示每人應付金額</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeEdit()">取消</button>
+      <button class="btn-save" id="edit-save-btn" onclick="saveEdit()">💾 儲存</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ════════════════════════════════════════════
@@ -519,9 +609,18 @@ function renderRecords(){
         <div class="rec-meta" style="margin-top:3px;font-size:11px">${names}</div>
       </div>
       <div class="rec-amount">NT$${Number(r.amount).toLocaleString()}</div>
-      <button class="rec-del" onclick="deleteRec('${r._fbKey}')">✕</button>
+      <button class="rec-edit" data-key="${r._fbKey}">✏️</button>
+      <button class="rec-del" data-key="${r._fbKey}">✕</button>
     </div>`;
   }).join('');
+
+  // 事件委派：避免 onclick 字串解析問題
+  list.querySelectorAll('.rec-edit').forEach(btn => {
+    btn.addEventListener('click', () => openEdit(btn.dataset.key));
+  });
+  list.querySelectorAll('.rec-del').forEach(btn => {
+    btn.addEventListener('click', () => deleteRec(btn.dataset.key));
+  });
 }
 
 function updateStats(){
@@ -585,6 +684,115 @@ function renderSettle(){
 
 let toastTimer;
 function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2800); }
+
+// ── 編輯功能 ──
+let editFbKey = null;
+let editSelected = new Set();
+
+function openEdit(fbKey){
+  const r = records.find(x => x._fbKey === fbKey);
+  if(!r){ toast('找不到記錄'); return; }
+  editFbKey = fbKey;
+
+  const sel = document.getElementById('edit-payer');
+  sel.innerHTML = '';
+  MEMBERS.forEach(m => {
+    const o = document.createElement('option');
+    o.value = String(m.id);
+    o.textContent = m.emoji + ' ' + m.name;
+    if(m.id === Number(r.payerId)) o.selected = true;
+    sel.appendChild(o);
+  });
+
+  document.getElementById('edit-item-name').value = r.itemName || '';
+  document.getElementById('edit-amount').value = r.amount || '';
+  editSelected = new Set(normalizeMembers(r.members));
+  renderEditGrid();
+  updateEditPreview();
+  document.getElementById('edit-amount').oninput = updateEditPreview;
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEdit(){
+  document.getElementById('edit-modal').classList.remove('open');
+  editFbKey = null;
+}
+
+function closeEditIfOverlay(e){
+  if(e.target === document.getElementById('edit-modal')) closeEdit();
+}
+
+function renderEditGrid(){
+  const g = document.getElementById('edit-members-grid');
+  g.innerHTML = '';
+  MEMBERS.forEach(m => {
+    const c = document.createElement('div');
+    c.className = 'member-chip' + (editSelected.has(m.id) ? ' selected' : '');
+    c.innerHTML = '<div class="av">' + m.emoji + '</div>' + m.name;
+    c.onclick = () => {
+      editSelected.has(m.id) ? editSelected.delete(m.id) : editSelected.add(m.id);
+      c.classList.toggle('selected');
+      updateEditPreview();
+    };
+    g.appendChild(c);
+  });
+}
+
+function editSelectAll(){ MEMBERS.forEach(m => editSelected.add(m.id)); renderEditGrid(); updateEditPreview(); }
+function editClearAll(){ editSelected.clear(); renderEditGrid(); updateEditPreview(); }
+
+function updateEditPreview(){
+  const amt = parseFloat(document.getElementById('edit-amount').value) || 0;
+  const cnt = editSelected.size;
+  const el = document.getElementById('edit-split-preview');
+  if(!cnt){ el.innerHTML = '⚠️ 請至少選擇一位分擔人員'; return; }
+  el.innerHTML = '已選 <span>' + cnt + ' 人</span>，每人應付 <span>NT$' + Math.round(amt/cnt).toLocaleString() + '</span>';
+}
+
+async function saveEdit(){
+  if(!editFbKey){ closeEdit(); return; }
+  const payerId = parseInt(document.getElementById('edit-payer').value);
+  const itemName = document.getElementById('edit-item-name').value.trim();
+  const amount = parseFloat(document.getElementById('edit-amount').value);
+  if(!payerId){ toast('請選擇付款人員'); return; }
+  if(!itemName){ toast('請輸入品項名稱'); return; }
+  if(!amount || amount <= 0){ toast('請輸入有效金額'); return; }
+  if(!editSelected.size){ toast('請至少選擇一位分擔人員'); return; }
+
+  const payer = MEMBERS.find(m => m.id === payerId);
+  const membersArr = [...editSelected].map(Number);
+  const orig = records.find(r => r._fbKey === editFbKey);
+  const updated = {
+    id: orig ? orig.id : Date.now(),
+    time: orig ? orig.time : '',
+    payerId: Number(payerId),
+    payerName: payer.name,
+    itemName: itemName,
+    amount: Number(amount),
+    members: membersArr,
+    memberNames: membersArr.map(id => { const m = MEMBERS.find(m => m.id === id); return m ? m.name : ''; }).join(','),
+  };
+
+  const btn = document.querySelector('#edit-modal .btn-save');
+  btn.disabled = true; btn.textContent = '儲存中…';
+  try{
+    const res = await fetch(FB_URL + '/expenses/' + editFbKey + '.json', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updated)
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const idx = records.findIndex(r => r._fbKey === editFbKey);
+    if(idx >= 0) records[idx] = Object.assign({}, updated, {_fbKey: editFbKey});
+    renderRecords(); updateStats();
+    toast('✅ 已更新');
+    closeEdit();
+  } catch(e){
+    toast('❌ 更新失敗：' + e.message);
+  } finally{
+    btn.disabled = false; btn.textContent = '💾 儲存';
+  }
+}
 
 init();
 </script>
