@@ -185,6 +185,16 @@ select option{background:var(--surface2);}
   background:var(--surface2);border-top:1px solid var(--border);}
 .settle-footer b{font-family:'Space Grotesk',sans-serif;font-weight:700;}
 
+/* ── 打勾功能 ── */
+.txn-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;margin-right:10px;cursor:pointer;background:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;-webkit-tap-highlight-color:transparent;padding:0;}
+.txn-check:hover{border-color:var(--accent);}
+.txn-check.checked{background:var(--green);border-color:var(--green);color:#0d0f14;font-size:12px;font-weight:700;}
+.settle-txn-row.done{opacity:.4;}
+.settle-txn-row.done .settle-txn-name{text-decoration:line-through;}
+
 .btn-reset{width:100%;background:none;border:1.5px solid rgba(248,113,113,.3);
   color:var(--red);border-radius:8px;padding:11px;font-size:13px;font-weight:600;
   cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .2s;margin-top:8px;}
@@ -195,6 +205,77 @@ select option{background:var(--surface2);}
   padding:12px 20px;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.4);
   transition:transform .3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── 標題編輯 ── */
+.header-title-wrap{display:flex;align-items:center;gap:6px;}
+.title-edit-btn{background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;
+  padding:2px 4px;border-radius:4px;transition:color .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.title-edit-btn:hover{color:var(--accent);}
+.title-input{background:transparent;border:none;border-bottom:1.5px solid var(--accent);
+  color:var(--text);font-size:16px;font-weight:700;font-family:'Noto Sans TC',sans-serif;
+  outline:none;width:180px;padding:2px 0;}
+
+/* ── 人員管理列表 ── */
+.member-manage-row{display:flex;align-items:center;gap:8px;padding:10px 0;
+  border-bottom:1px solid var(--border);}
+.member-manage-row:last-child{border-bottom:none;}
+.member-emoji-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:6px 10px;font-size:18px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.member-name-input{flex:1;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);padding:8px 12px;font-size:14px;
+  font-family:'Noto Sans TC',sans-serif;outline:none;}
+.member-name-input:focus{border-color:var(--accent);}
+.member-del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;
+  padding:4px 8px;border-radius:6px;transition:color .15s,background .15s;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;}
+.member-del-btn:hover{color:var(--red);background:rgba(248,113,113,.1);}
+.btn-add-member{width:100%;background:rgba(245,166,35,.08);border:1.5px dashed rgba(245,166,35,.4);
+  color:var(--accent);border-radius:8px;padding:10px;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-top:12px;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;}
+.btn-add-member:hover{background:rgba(245,166,35,.15);}
+.emoji-picker{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:8px;margin-top:6px;}
+.emoji-opt{font-size:20px;text-align:center;cursor:pointer;padding:4px;border-radius:4px;
+  transition:background .15s;-webkit-tap-highlight-color:transparent;}
+.emoji-opt:hover{background:rgba(255,255,255,.1);}
+.settings-btn{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;
+  padding:4px;margin-left:4px;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.settings-btn:hover{color:var(--accent);}
+
+/* ── 個人支出頁籤 ── */
+.person-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:10px;overflow:hidden;}
+.person-row-head{padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;user-select:none;}
+.person-row-head:hover{background:rgba(255,255,255,.02);}
+.person-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0;background:linear-gradient(135deg,#667eea,#764ba2);}
+.person-info{flex:1;min-width:0;}
+.person-name{font-size:14px;font-weight:600;}
+.person-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.person-total{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;
+  color:var(--accent);flex-shrink:0;}
+.person-chevron{font-size:12px;color:var(--text3);margin-left:6px;transition:transform .2s;flex-shrink:0;}
+.person-chevron.open{transform:rotate(180deg);}
+.person-detail{display:none;border-top:1px solid var(--border);}
+.person-detail.open{display:block;}
+.person-detail-row{padding:10px 16px 10px 64px;display:flex;align-items:center;
+  border-bottom:1px solid var(--border);font-size:13px;}
+.person-detail-row:last-child{border-bottom:none;}
+.person-detail-name{flex:1;color:var(--text2);}
+.person-detail-type{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;margin-left:6px;flex-shrink:0;}
+.type-paid{background:rgba(74,222,128,.12);color:var(--green);}
+.type-share{background:rgba(245,166,35,.12);color:var(--accent);}
+.person-detail-amt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;margin-left:10px;flex-shrink:0;}
+.person-bar-wrap{padding:0 16px 12px 16px;}
+.person-bar-bg{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;}
+.person-bar-fill{height:6px;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s ease;}
+.person-balance-row{padding:10px 16px;display:flex;justify-content:space-between;
+  font-size:12px;color:var(--text2);background:var(--surface2);border-top:1px solid var(--border);}
+.person-balance-pos{color:var(--green);font-weight:700;font-family:'Space Grotesk',sans-serif;}
+.person-balance-neg{color:var(--red);font-weight:700;font-family:'Space Grotesk',sans-serif;}
 
 /* ── 編輯 Modal ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
@@ -224,10 +305,14 @@ select option{background:var(--surface2);}
 
 <header>
   <div class="logo">🏠</div>
-  <div>
-    <h1>楊梅包棟分帳系統</h1>
-    <p>Firebase 即時同步版 · 13 人同行</p>
+  <div style="flex:1;min-width:0;">
+    <div class="header-title-wrap">
+      <h1 id="header-title">楊梅包棟分帳系統</h1>
+      <button class="title-edit-btn" onclick="startEditTitle()" title="編輯標題">✏️</button>
+    </div>
+    <p id="header-sub">Firebase 即時同步版 · <span id="member-count">13</span> 人同行</p>
   </div>
+  <button class="settings-btn" onclick="openMemberModal()" title="管理人員">⚙️</button>
   <div id="conn-dot" class="conn-dot" title="連線狀態"></div>
   <span class="conn-label" id="conn-label">未連線</span>
 </header>
@@ -242,25 +327,13 @@ select option{background:var(--surface2);}
   <div class="tab active" onclick="switchTab('add')">➕ 新增費用</div>
   <div class="tab" onclick="switchTab('records')">📋 費用記錄</div>
   <div class="tab" onclick="switchTab('settle')">💰 分帳結果</div>
+  <div class="tab" onclick="switchTab('personal')">👤 個人支出</div>
 </div>
 
 <!-- TAB 新增費用 -->
 <div class="page active" id="tab-add">
 
-  <div class="setup-card" id="setup-card">
-    <h3>🔥 第一步：設定 Firebase 資料庫網址</h3>
-    <p>請先完成以下設定，再開始使用：</p>
-    <p>
-      1. 前往 <a href="https://console.firebase.google.com" target="_blank" style="color:#60a5fa">Firebase Console</a> → 建立新專案<br>
-      2. 左側點「Realtime Database」→「建立資料庫」→ 選<code>測試模式</code><br>
-      3. 複製資料庫網址（格式：<code>https://你的專案-default-rtdb.firebaseio.com</code>）<br>
-      4. 貼到下方後儲存，即可開始使用（所有人即時同步）
-    </p>
-    <div class="setup-input">
-      <input type="text" id="fb-url-input" placeholder="https://你的專案-default-rtdb.firebaseio.com">
-      <button onclick="saveFirebaseUrl()">儲存</button>
-    </div>
-  </div>
+
 
   <div class="card">
     <div class="card-header">
@@ -315,7 +388,33 @@ select option{background:var(--surface2);}
   <button class="btn-reset" onclick="resetAll()">🗑️ 清除所有記錄，重新開始</button>
 </div>
 
+<!-- TAB 個人支出 -->
+<div class="page" id="tab-personal">
+  <div id="personal-content"></div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<!-- 人員管理 Modal -->
+<div class="modal-overlay" id="member-modal" onclick="closeMemberModalOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>⚙️ 人員管理</h3>
+      <button class="modal-close" onclick="closeMemberModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="member-manage-list"></div>
+      <div id="emoji-picker-wrap" style="display:none">
+        <div class="emoji-picker" id="emoji-picker"></div>
+      </div>
+      <button class="btn-add-member" onclick="addNewMember()">＋ 新增成員</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeMemberModal()">取消</button>
+      <button class="btn-save" onclick="saveMemberChanges()">💾 儲存</button>
+    </div>
+  </div>
+</div>
 
 <!-- 編輯 Modal -->
 <div class="modal-overlay" id="edit-modal" onclick="closeEditIfOverlay(event)">
@@ -360,12 +459,14 @@ select option{background:var(--surface2);}
 //  不需要 SDK，直接用 fetch 呼叫
 // ════════════════════════════════════════════
 const FB_KEY = 'firebase_db_url';
-let FB_URL = 'https://havefun-318dd-default-rtdb.firebaseio.com';
+// 強制寫死，清除任何舊的 localStorage 設定
+localStorage.removeItem(FB_KEY);
+const FB_URL = 'https://havefun-318dd-default-rtdb.firebaseio.com';
 let records = [];
 let selected = new Set();
 let unsubscribe = null;
 
-const MEMBERS = [
+const DEFAULT_MEMBERS = [
   { id:1,  name:'采玲 Grace',   emoji:'🎁' },
   { id:2,  name:'Carson',       emoji:'🧑' },
   { id:3,  name:'chun',         emoji:'🌿' },
@@ -376,29 +477,46 @@ const MEMBERS = [
   { id:8,  name:'Ashley',       emoji:'🌺' },
   { id:9,  name:'林家宏',       emoji:'🏔️' },
   { id:10, name:'洪奕鎮',       emoji:'🎨' },
-  { id:11, name:'王乃皜', emoji:'🍀' },
+  { id:11, name:'王乃皜',       emoji:'🍀' },
   { id:12, name:'許迦智',       emoji:'🦁' },
   { id:13, name:'吳佳盈',       emoji:'🌼' },
 ];
+const MEMBERS_KEY = 'split_members';
+const TITLE_KEY   = 'split_title';
+let MEMBERS = (() => {
+  try { const d=localStorage.getItem(MEMBERS_KEY); return d?JSON.parse(d):[...DEFAULT_MEMBERS]; }
+  catch{ return [...DEFAULT_MEMBERS]; }
+})();
 
 function init(){
+  // 載入標題
+  const savedTitle = localStorage.getItem(TITLE_KEY);
+  if(savedTitle){
+    document.getElementById('header-title').textContent = savedTitle;
+    document.title = savedTitle;
+  }
+
   MEMBERS.forEach(m=>selected.add(m.id));
-  const sel=document.getElementById('payer');
-  MEMBERS.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=`${m.emoji} ${m.name}`; sel.appendChild(o); });
+  refreshPayerSelect();
   renderMembersGrid();
+  updateMemberCount();
   updatePreview();
   document.getElementById('amount').addEventListener('input', updatePreview);
-  document.getElementById('setup-card').style.display='none';
   startRealtimeSync();
 }
 
-function saveFirebaseUrl(){
-  const v=document.getElementById('fb-url-input').value.trim().replace(/\/$/,'');
-  if(!v||!v.startsWith('https://')){ toast('請輸入正確的 Firebase 網址'); return; }
-  FB_URL=v; localStorage.setItem(FB_KEY,v);
-  document.getElementById('setup-card').style.display='none';
-  startRealtimeSync(); toast('✅ 已連線 Firebase，即時同步啟動！');
+function refreshPayerSelect(){
+  const sel=document.getElementById('payer');
+  const prev=sel.value;
+  sel.innerHTML='<option value="">— 請選擇付款人 —</option>';
+  MEMBERS.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.emoji+' '+m.name; sel.appendChild(o); });
+  if(prev) sel.value=prev;
 }
+
+function updateMemberCount(){
+  document.getElementById('member-count').textContent = MEMBERS.length;
+}
+
 
 // ── Firebase REST API ──
 function dbUrl(path=''){ return `${FB_URL}/expenses${path}.json`; }
@@ -519,7 +637,7 @@ async function addRecord(){
     document.getElementById('item-name').value='';
     document.getElementById('amount').value='';
     selectAll();
-    renderRecords(); updateStats();
+    renderRecords(); updateStats(); refreshPersonalIfVisible();
     toast('✅ 已同步至 Firebase');
     switchTab('records');
   }catch(e){ toast('❌ 存入失敗'); setConn('err'); }
@@ -554,11 +672,12 @@ function setConn(state){
 }
 
 function switchTab(t){
-  const keys=['add','records','settle'];
+  const keys=['add','records','settle','personal'];
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',keys[i]===t));
   document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='settle') renderSettle();
+  if(t==='personal') renderPersonal();
 }
 
 function renderMembersGrid(){
@@ -577,7 +696,7 @@ function updatePreview(){
   const amt=parseFloat(document.getElementById('amount').value)||0, cnt=selected.size;
   const el=document.getElementById('split-preview');
   if(!cnt){ el.innerHTML='⚠️ 請至少選擇一位分擔人員'; return; }
-  el.innerHTML=`已選 <span>${cnt} 人</span>，每人應付 <span>NT$${Math.round(amt/cnt).toLocaleString()}</span>`;
+  el.innerHTML=`已選 <span>${cnt} 人</span>，每人應付 <span>NT$${Math.ceil(amt/cnt).toLocaleString()}</span>`;
 }
 
 // ── Firebase 回傳 array 會變成 {0:x,1:y} 物件，需正規化 ──
@@ -601,7 +720,7 @@ function renderRecords(){
     const payer=MEMBERS.find(m=>m.id===pid);
     const mIds=normalizeMembers(r.members);
     const names=mIds.map(id=>MEMBERS.find(m=>m.id===id)?.name).filter(Boolean).join('、');
-    const each=mIds.length>0?Math.round(Number(r.amount)/mIds.length):0;
+    const each=mIds.length>0?Math.ceil(Number(r.amount)/mIds.length):0;
     return `<div class="record-item">
       <div class="rec-av">${payer?.emoji||'?'}</div>
       <div class="rec-info">
@@ -638,7 +757,12 @@ function updateStats(){
   // 平均每人 = 有分擔到費用的人的平均應付
   const vals=Object.values(owedMap).filter(v=>v>0);
   const avg=vals.length>0 ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
-  document.getElementById('stat-avg').textContent='NT$'+Math.round(avg).toLocaleString();
+  document.getElementById('stat-avg').textContent='NT$'+Math.ceil(avg).toLocaleString();
+  refreshPersonalIfVisible();
+}
+
+function refreshPersonalIfVisible(){
+  if(document.getElementById('tab-personal')?.classList.contains('active')) renderPersonal();
 }
 
 function calcTransactions(){
@@ -657,34 +781,314 @@ function calcTransactions(){
   const txns=[]; let i=0,j=0;
   while(i<creditors.length&&j<debtors.length){
     const amt=Math.min(creditors[i].bal,debtors[j].bal);
-    if(amt>0.5) txns.push({from:debtors[j].id,to:creditors[i].id,amount:Math.round(amt)});
+    if(amt>0.5) txns.push({from:debtors[j].id,to:creditors[i].id,amount:Math.ceil(amt)});
     creditors[i].bal-=amt; debtors[j].bal-=amt;
     if(creditors[i].bal<0.5) i++; if(debtors[j].bal<0.5) j++;
   }
   return{txns,paid,owed};
 }
 
+// 打勾狀態存在 localStorage，key = "from_to_amount"
+const CHECKS_KEY = 'settle_checks_v1';
+function loadChecks(){ try{ return JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}'); }catch{ return {}; } }
+function saveChecks(c){ localStorage.setItem(CHECKS_KEY, JSON.stringify(c)); }
+function txnKey(t){ return t.from+'_'+t.to+'_'+t.amount; }
+
+function toggleCheck(key){
+  const checks = loadChecks();
+  checks[key] = !checks[key];
+  saveChecks(checks);
+  const row = document.querySelector('.settle-txn-row[data-key="'+key+'"]');
+  const btn = document.querySelector('.txn-check[data-key="'+key+'"]');
+  if(row) row.classList.toggle('done', !!checks[key]);
+  if(btn){ btn.classList.toggle('checked', !!checks[key]); btn.textContent = checks[key] ? '✓' : ''; }
+}
+
 function renderSettle(){
   const el=document.getElementById('settle-content');
   if(!records.length){ el.innerHTML='<div class="empty-state"><div class="icon">💸</div>尚無費用記錄</div>'; return; }
   const{txns,paid,owed}=calcTransactions();
+  const checks=loadChecks();
+
   el.innerHTML=MEMBERS.map(m=>{
-    const myRecv=txns.filter(t=>Number(t.to)===m.id), myPay=txns.filter(t=>Number(t.from)===m.id);
-    const totalRecv=myRecv.reduce((s,t)=>s+t.amount,0), totalPay=myPay.reduce((s,t)=>s+t.amount,0);
+    const myRecv=txns.filter(t=>Number(t.to)===m.id);
+    const myPay =txns.filter(t=>Number(t.from)===m.id);
+    const totalRecv=myRecv.reduce((s,t)=>s+t.amount,0);
+    const totalPay =myPay.reduce((s,t)=>s+t.amount,0);
+
     let dirHTML;
-    if(!myRecv.length&&!myPay.length) dirHTML=`<span class="dir-even">✅ 帳目已平</span>`;
-    else if(myRecv.length&&!myPay.length) dirHTML=`<span class="dir-recv">應收</span>`;
-    else if(!myRecv.length&&myPay.length) dirHTML=`<span class="dir-pay">應付</span>`;
-    else dirHTML=`<span class="dir-recv">應收</span><span style="color:var(--text3);margin:0 4px">/</span><span class="dir-pay">應付</span>`;
-    const recvRows=myRecv.map(t=>{ const from=MEMBERS.find(x=>x.id===t.from); return `<div class="settle-txn-row"><span class="settle-txn-name">${from.emoji} ${from.name}</span><span class="txn-amt-recv">NT$${t.amount.toLocaleString()}</span><span class="settle-tag tag-recv">還款</span></div>`; }).join('');
-    const payRows=myPay.map(t=>{ const to=MEMBERS.find(x=>x.id===t.to); return `<div class="settle-txn-row"><span class="settle-txn-name">${to.emoji} ${to.name}</span><span class="txn-amt-pay">NT$${t.amount.toLocaleString()}</span><span class="settle-tag tag-pay">匯款</span></div>`; }).join('');
-    const footer=(myRecv.length||myPay.length)?`<div class="settle-footer">${totalRecv?`應收 <b style="color:var(--green)">NT$${totalRecv.toLocaleString()}</b>&nbsp;&nbsp;`:''}${totalPay?`應付 <b style="color:var(--accent)">NT$${totalPay.toLocaleString()}</b>`:''}</div>`:'';
-    return `<div class="settle-person"><div class="settle-head"><div style="font-size:22px">${m.emoji}</div><div class="settle-name">${m.name}</div>${dirHTML}</div>${recvRows}${payRows}${footer}</div>`;
+    if(!myRecv.length&&!myPay.length) dirHTML='<span class="dir-even">✅ 帳目已平</span>';
+    else if(myRecv.length&&!myPay.length) dirHTML='<span class="dir-recv">應收</span>';
+    else if(!myRecv.length&&myPay.length) dirHTML='<span class="dir-pay">應付</span>';
+    else dirHTML='<span class="dir-recv">應收</span><span style="color:var(--text3);margin:0 4px">/</span><span class="dir-pay">應付</span>';
+
+    const recvRows=myRecv.map(t=>{
+      const from=MEMBERS.find(x=>x.id===t.from);
+      const k=txnKey(t), done=checks[k]?'done':'', chk=checks[k]?'checked':'';
+      return '<div class="settle-txn-row '+done+'" data-key="'+k+'">'
+        +'<button class="txn-check '+chk+'" data-key="'+k+'">'+(checks[k]?'✓':'')+'</button>'
+        +'<span class="settle-txn-name">'+(from?from.emoji+' '+from.name:'?')+'</span>'
+        +'<span class="txn-amt-recv">NT$'+t.amount.toLocaleString()+'</span>'
+        +'<span class="settle-tag tag-recv">還款</span>'
+        +'</div>';
+    }).join('');
+
+    const payRows=myPay.map(t=>{
+      const to=MEMBERS.find(x=>x.id===t.to);
+      const k=txnKey(t), done=checks[k]?'done':'', chk=checks[k]?'checked':'';
+      return '<div class="settle-txn-row '+done+'" data-key="'+k+'">'
+        +'<button class="txn-check '+chk+'" data-key="'+k+'">'+(checks[k]?'✓':'')+'</button>'
+        +'<span class="settle-txn-name">'+(to?to.emoji+' '+to.name:'?')+'</span>'
+        +'<span class="txn-amt-pay">NT$'+t.amount.toLocaleString()+'</span>'
+        +'<span class="settle-tag tag-pay">匯款</span>'
+        +'</div>';
+    }).join('');
+
+    const footer=(myRecv.length||myPay.length)
+      ?'<div class="settle-footer">'
+        +(totalRecv?'應收 <b style="color:var(--green)">NT$'+totalRecv.toLocaleString()+'</b>&nbsp;&nbsp;':'')
+        +(totalPay?'應付 <b style="color:var(--accent)">NT$'+totalPay.toLocaleString()+'</b>':'')
+        +'</div>':'';
+
+    return '<div class="settle-person">'
+      +'<div class="settle-head"><div style="font-size:22px">'+m.emoji+'</div>'
+      +'<div class="settle-name">'+m.name+'</div>'+dirHTML+'</div>'
+      +recvRows+payRows+footer
+      +'</div>';
   }).join('');
+
+  // 事件委派：避免 onclick 字串引號問題
+  document.querySelectorAll('#settle-content .txn-check').forEach(btn => {
+    btn.addEventListener('click', () => toggleCheck(btn.dataset.key));
+  });
+}
+
+// ══════════════════════════════════
+//  個人支出頁籤
+// ══════════════════════════════════
+function renderPersonal(){
+  const el = document.getElementById('personal-content');
+  if(!records.length){
+    el.innerHTML = '<div class="empty-state"><div class="icon">👤</div>尚無費用記錄，請先新增費用</div>';
+    return;
+  }
+
+  // 計算每人：已付出、應負擔
+  const paid = {}, owed = {};
+  MEMBERS.forEach(m => { paid[m.id] = 0; owed[m.id] = 0; });
+  records.forEach(r => {
+    const pid = normalizePayer(r);
+    if(paid[pid] !== undefined) paid[pid] += Number(r.amount);
+    const mIds = normalizeMembers(r.members);
+    const sh = Number(r.amount) / (mIds.length || 1);
+    mIds.forEach(id => { if(owed[id] !== undefined) owed[id] += sh; });
+  });
+
+  const maxOwed = Math.max(...MEMBERS.map(m => owed[m.id]), 1);
+
+  el.innerHTML = MEMBERS.map(m => {
+    const paidAmt  = paid[m.id];
+    const owedAmt  = owed[m.id];
+    const balance  = paidAmt - owedAmt;
+    const balHTML  = balance > 0.5
+      ? '結餘 <span class="person-balance-pos">+NT$' + Math.ceil(balance).toLocaleString() + '</span>'
+      : balance < -0.5
+        ? '尚欠 <span class="person-balance-neg">NT$' + Math.ceil(-balance).toLocaleString() + '</span>'
+        : '<span style="color:var(--green)">✅ 帳目已平</span>';
+    const barPct = maxOwed > 0 ? Math.round((owedAmt / maxOwed) * 100) : 0;
+
+    // 明細：此人付的帳 + 被分擔到的帳
+    const payedRows = records
+      .filter(r => normalizePayer(r) === m.id)
+      .map(r => '<div class="person-detail-row">' +
+        '<span class="person-detail-name">' + (r.itemName||'未命名') + '</span>' +
+        '<span class="person-detail-type type-paid">付款</span>' +
+        '<span class="person-detail-amt" style="color:var(--green)">+NT$' + Number(r.amount).toLocaleString() + '</span>' +
+      '</div>').join('');
+
+    const sharedRows = records
+      .filter(r => normalizeMembers(r.members).includes(m.id))
+      .map(r => {
+        const mIds = normalizeMembers(r.members);
+        const sh = Math.ceil(Number(r.amount) / mIds.length);
+        return '<div class="person-detail-row">' +
+          '<span class="person-detail-name">' + (r.itemName||'未命名') + '</span>' +
+          '<span class="person-detail-type type-share">應付</span>' +
+          '<span class="person-detail-amt" style="color:var(--accent)">NT$' + sh.toLocaleString() + '</span>' +
+        '</div>';
+      }).join('');
+
+    return '<div class="person-row">' +
+      '<div class="person-row-head" onclick="togglePersonDetail(this)">' +
+        '<div class="person-av">' + m.emoji + '</div>' +
+        '<div class="person-info">' +
+          '<div class="person-name">' + m.name + '</div>' +
+          '<div class="person-sub">應負擔 NT$' + Math.ceil(owedAmt).toLocaleString() + '　已付 NT$' + Math.ceil(paidAmt).toLocaleString() + '</div>' +
+        '</div>' +
+        '<div class="person-total">NT$' + Math.ceil(owedAmt).toLocaleString() + '</div>' +
+        '<div class="person-chevron">▼</div>' +
+      '</div>' +
+      '<div class="person-bar-wrap" style="padding-top:8px">' +
+        '<div class="person-bar-bg"><div class="person-bar-fill" style="width:' + barPct + '%"></div></div>' +
+      '</div>' +
+      '<div class="person-detail" id="detail-' + m.id + '">' +
+        (payedRows || sharedRows
+          ? payedRows + sharedRows
+          : '<div class="person-detail-row"><span class="person-detail-name" style="color:var(--text3)">此次未參與任何費用</span></div>') +
+        '<div class="person-balance-row"><span>' + balHTML + '</span></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function togglePersonDetail(headEl){
+  const detail = headEl.parentElement.querySelector('.person-detail');
+  const chevron = headEl.querySelector('.person-chevron');
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
 }
 
 let toastTimer;
 function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2800); }
+
+// ══════════════════════════════════
+//  標題編輯
+// ══════════════════════════════════
+function startEditTitle(){
+  const h1 = document.getElementById('header-title');
+  const current = h1.textContent;
+  const wrap = h1.parentElement;
+  h1.style.display = 'none';
+  wrap.querySelector('.title-edit-btn').style.display = 'none';
+
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'title-input';
+  inp.value = current;
+  wrap.insertBefore(inp, h1);
+  inp.focus(); inp.select();
+
+  const done = () => {
+    const val = inp.value.trim() || current;
+    h1.textContent = val;
+    localStorage.setItem(TITLE_KEY, val);
+    document.title = val;
+    inp.remove();
+    h1.style.display = '';
+    wrap.querySelector('.title-edit-btn').style.display = '';
+  };
+  inp.addEventListener('blur', done);
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') inp.blur(); if(e.key==='Escape'){ inp.value=current; inp.blur(); } });
+}
+
+// ══════════════════════════════════
+//  人員管理 Modal
+// ══════════════════════════════════
+const EMOJIS = ['😀','😎','🤓','😊','🙂','😄','😤','🧐','😁','🥰','😏','🤩','🧔','💁','🎁','🧑','🌿','👩','🌊','🌸','👨','🌺','🏔️','🎨','🍀','🦁','🌼','⭐','🎯','🎪','🦊','🐼','🦋','🌈','🍕','☕','🎸','🏄'];
+let draftMembers = [];
+let emojiTargetIdx = null;
+
+function openMemberModal(){
+  draftMembers = MEMBERS.map(m => ({...m}));
+  renderMemberList();
+  document.getElementById('emoji-picker-wrap').style.display = 'none';
+  document.getElementById('member-modal').classList.add('open');
+}
+
+function closeMemberModal(){
+  document.getElementById('member-modal').classList.remove('open');
+  emojiTargetIdx = null;
+}
+
+function closeMemberModalOverlay(e){
+  if(e.target === document.getElementById('member-modal')) closeMemberModal();
+}
+
+function renderMemberList(){
+  const list = document.getElementById('member-manage-list');
+  list.innerHTML = '';
+  draftMembers.forEach((m, idx) => {
+    const row = document.createElement('div');
+    row.className = 'member-manage-row';
+    row.innerHTML =
+      '<button class="member-emoji-btn" data-idx="'+idx+'" title="換 emoji">'+m.emoji+'</button>' +
+      '<input class="member-name-input" type="text" value="'+m.name+'" data-idx="'+idx+'" placeholder="輸入姓名">' +
+      '<button class="member-del-btn" data-idx="'+idx+'" title="刪除">🗑️</button>';
+    list.appendChild(row);
+  });
+
+  list.querySelectorAll('.member-emoji-btn').forEach(btn => {
+    btn.addEventListener('click', () => toggleEmojiPicker(parseInt(btn.dataset.idx), btn));
+  });
+  list.querySelectorAll('.member-name-input').forEach(inp => {
+    inp.addEventListener('input', () => { draftMembers[parseInt(inp.dataset.idx)].name = inp.value; });
+  });
+  list.querySelectorAll('.member-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(draftMembers.length <= 1){ toast('至少要保留一位成員'); return; }
+      draftMembers.splice(parseInt(btn.dataset.idx), 1);
+      renderMemberList();
+    });
+  });
+}
+
+function toggleEmojiPicker(idx, anchorBtn){
+  const wrap = document.getElementById('emoji-picker-wrap');
+  if(emojiTargetIdx === idx && wrap.style.display !== 'none'){
+    wrap.style.display = 'none'; emojiTargetIdx = null; return;
+  }
+  emojiTargetIdx = idx;
+
+  // 建立 emoji 格
+  const picker = document.getElementById('emoji-picker');
+  picker.innerHTML = '';
+  EMOJIS.forEach(e => {
+    const d = document.createElement('div');
+    d.className = 'emoji-opt'; d.textContent = e;
+    d.addEventListener('click', () => {
+      draftMembers[emojiTargetIdx].emoji = e;
+      wrap.style.display = 'none'; emojiTargetIdx = null;
+      renderMemberList();
+    });
+    picker.appendChild(d);
+  });
+
+  // 把 picker 插到該行下方
+  const row = anchorBtn.closest('.member-manage-row');
+  row.parentElement.insertBefore(wrap, row.nextSibling);
+  wrap.style.display = 'block';
+}
+
+function addNewMember(){
+  const newId = Date.now();
+  draftMembers.push({ id: newId, name: '', emoji: '😀' });
+  renderMemberList();
+  // focus 最後一個 input
+  const inputs = document.querySelectorAll('#member-manage-list .member-name-input');
+  if(inputs.length) inputs[inputs.length-1].focus();
+}
+
+function saveMemberChanges(){
+  // 驗證：名字不能空白
+  const invalid = draftMembers.filter(m => !m.name.trim());
+  if(invalid.length){ toast('請填寫所有成員姓名'); return; }
+
+  MEMBERS = draftMembers.map(m => ({...m, name: m.name.trim()}));
+  localStorage.setItem(MEMBERS_KEY, JSON.stringify(MEMBERS));
+
+  // 更新 selected（移除已刪除的成員）
+  const ids = new Set(MEMBERS.map(m => m.id));
+  for(const id of selected) if(!ids.has(id)) selected.delete(id);
+  MEMBERS.forEach(m => selected.add(m.id)); // 新增成員預設全選
+
+  refreshPayerSelect();
+  renderMembersGrid();
+  updateMemberCount();
+  updateStats();
+  closeMemberModal();
+  toast('✅ 人員設定已儲存');
+}
 
 // ── 編輯功能 ──
 let editFbKey = null;
@@ -747,7 +1151,7 @@ function updateEditPreview(){
   const cnt = editSelected.size;
   const el = document.getElementById('edit-split-preview');
   if(!cnt){ el.innerHTML = '⚠️ 請至少選擇一位分擔人員'; return; }
-  el.innerHTML = '已選 <span>' + cnt + ' 人</span>，每人應付 <span>NT$' + Math.round(amt/cnt).toLocaleString() + '</span>';
+  el.innerHTML = '已選 <span>' + cnt + ' 人</span>，每人應付 <span>NT$' + Math.ceil(amt/cnt).toLocaleString() + '</span>';
 }
 
 async function saveEdit(){
