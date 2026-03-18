@@ -523,6 +523,13 @@ function init(){
   updateMemberCount();
   updatePreview();
   document.getElementById('amount').addEventListener('input', updatePreview);
+
+  // 分帳打勾：綁在 tab-settle 層（永遠存在），只綁一次，不受 renderSettle 重繪影響
+  document.getElementById('tab-settle').addEventListener('click', e => {
+    const btn = e.target.closest('.txn-check');
+    if(btn && btn.dataset.key) toggleCheck(btn.dataset.key);
+  });
+
   startRealtimeSync();
 }
 
@@ -912,14 +919,6 @@ function renderSettle(){
       +'</div>';
   }).join('');
 
-  // 用事件委派綁定到容器，避免重複綁定問題
-  const sc = document.getElementById('settle-content');
-  // 先移除舊的事件，再重新綁定
-  sc.replaceWith(sc.cloneNode(true));
-  document.getElementById('settle-content').addEventListener('click', e => {
-    const btn = e.target.closest('.txn-check');
-    if(btn) toggleCheck(btn.dataset.key);
-  });
   updateCheckProgress();
 }
 
