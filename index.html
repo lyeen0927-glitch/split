@@ -186,12 +186,14 @@ select option{background:var(--surface2);}
 .settle-footer b{font-family:'Space Grotesk',sans-serif;font-weight:700;}
 
 /* ── 打勾功能 ── */
-.txn-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
+.txn-cb{display:none;}
+.txn-check-label{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);
   flex-shrink:0;margin-right:10px;cursor:pointer;background:none;
   display:flex;align-items:center;justify-content:center;
-  transition:all .18s;-webkit-tap-highlight-color:transparent;padding:0;}
-.txn-check:hover{border-color:var(--accent);}
-.txn-check.checked{background:var(--green);border-color:var(--green);color:#0d0f14;font-size:12px;font-weight:700;}
+  transition:all .18s;-webkit-tap-highlight-color:transparent;}
+.txn-cb:checked + .txn-check-label{background:var(--green);border-color:var(--green);}
+.txn-cb:checked + .txn-check-label::after{content:'✓';font-size:12px;color:#0d0f14;font-weight:700;}
+.txn-check-label:hover{border-color:var(--accent);}
 .settle-txn-row.done{opacity:.4;}
 .settle-txn-row.done .settle-txn-name{text-decoration:line-through;}
 .settle-toolbar{display:flex;align-items:center;justify-content:space-between;
@@ -524,10 +526,11 @@ function init(){
   updatePreview();
   document.getElementById('amount').addEventListener('input', updatePreview);
 
-  // 分帳打勾：綁在 tab-settle 層（永遠存在），只綁一次，不受 renderSettle 重繪影響
-  document.getElementById('tab-settle').addEventListener('click', e => {
-    const btn = e.target.closest('.txn-check');
-    if(btn && btn.dataset.key) toggleCheck(btn.dataset.key);
+  // 分帳打勾：用 change 事件委派，綁在永遠存在的 tab-settle 上，只綁一次
+  document.getElementById('tab-settle').addEventListener('change', e => {
+    if(e.target.classList.contains('txn-cb') && e.target.dataset.key){
+      toggleCheck(e.target.dataset.key);
+    }
   });
 
   startRealtimeSync();
@@ -820,34 +823,40 @@ function calcTransactions(){
 const CHECKS_KEY = 'settle_checks_v1';
 function loadChecks(){ try{ return JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}'); }catch{ return {}; } }
 function saveChecks(c){ localStorage.setItem(CHECKS_KEY, JSON.stringify(c)); }
-function txnKey(t){ return t.from+'_'+t.to+'_'+t.amount; }
+// 用 index 確保唯一性，避免相同金額造成 key 衝突
+function txnKey(t, idx){ return 'txn_'+idx+'_'+t.from+'_'+t.to; }
 
 function toggleCheck(key){
   const checks = loadChecks();
   checks[key] = !checks[key];
   saveChecks(checks);
-  const row = document.querySelector('.settle-txn-row[data-key="'+key+'"]');
-  const btn = document.querySelector('.txn-check[data-key="'+key+'"]');
-  if(row) row.classList.toggle('done', !!checks[key]);
-  if(btn){ btn.classList.toggle('checked', !!checks[key]); btn.textContent = checks[key] ? '✓' : ''; }
+  // 直接用 key 找到對應的 checkbox 和 row
+  const cb = document.querySelector('input.txn-cb[data-key="'+key+'"]');
+  if(cb){
+    cb.checked = !!checks[key];
+    const row = cb.closest('.settle-txn-row');
+    if(row) row.classList.toggle('done', !!checks[key]);
+  }
   updateCheckProgress();
 }
 
 function updateCheckProgress(){
-  const all = document.querySelectorAll('#settle-content .txn-check');
-  const done = document.querySelectorAll('#settle-content .txn-check.checked');
-  document.getElementById('check-count').textContent = done.length;
-  document.getElementById('check-total').textContent = all.length;
+  const all  = document.querySelectorAll('#settle-content .txn-cb');
+  const done = document.querySelectorAll('#settle-content .txn-cb:checked');
+  const countEl = document.getElementById('check-count');
+  const totalEl = document.getElementById('check-total');
   const toolbar = document.getElementById('settle-toolbar');
+  if(countEl) countEl.textContent = done.length;
+  if(totalEl) totalEl.textContent = all.length;
   if(toolbar) toolbar.style.display = all.length ? 'flex' : 'none';
 }
 
 function checkAll(){
   const checks = loadChecks();
-  document.querySelectorAll('#settle-content .txn-check').forEach(btn => {
-    checks[btn.dataset.key] = true;
-    btn.classList.add('checked'); btn.textContent = '✓';
-    const row = btn.closest('.settle-txn-row');
+  document.querySelectorAll('#settle-content .txn-cb').forEach(cb => {
+    checks[cb.dataset.key] = true;
+    cb.checked = true;
+    const row = cb.closest('.settle-txn-row');
     if(row) row.classList.add('done');
   });
   saveChecks(checks);
@@ -856,10 +865,10 @@ function checkAll(){
 
 function uncheckAll(){
   const checks = loadChecks();
-  document.querySelectorAll('#settle-content .txn-check').forEach(btn => {
-    checks[btn.dataset.key] = false;
-    btn.classList.remove('checked'); btn.textContent = '';
-    const row = btn.closest('.settle-txn-row');
+  document.querySelectorAll('#settle-content .txn-cb').forEach(cb => {
+    checks[cb.dataset.key] = false;
+    cb.checked = false;
+    const row = cb.closest('.settle-txn-row');
     if(row) row.classList.remove('done');
   });
   saveChecks(checks);
@@ -872,7 +881,7 @@ function renderSettle(){
   const{txns,paid,owed}=calcTransactions();
   const checks=loadChecks();
 
-  el.innerHTML=MEMBERS.map(m=>{
+  el.innerHTML=MEMBERS.map((m,mi)=>{
     const myRecv=txns.filter(t=>Number(t.to)===m.id);
     const myPay =txns.filter(t=>Number(t.from)===m.id);
     const totalRecv=myRecv.reduce((s,t)=>s+t.amount,0);
@@ -884,22 +893,26 @@ function renderSettle(){
     else if(!myRecv.length&&myPay.length) dirHTML='<span class="dir-pay">應付</span>';
     else dirHTML='<span class="dir-recv">應收</span><span style="color:var(--text3);margin:0 4px">/</span><span class="dir-pay">應付</span>';
 
-    const recvRows=myRecv.map(t=>{
+    const recvRows=myRecv.map((t,i)=>{
       const from=MEMBERS.find(x=>x.id===t.from);
-      const k=txnKey(t), done=checks[k]?'done':'', chk=checks[k]?'checked':'';
-      return '<div class="settle-txn-row '+done+'" data-key="'+k+'">'
-        +'<button class="txn-check '+chk+'" data-key="'+k+'">'+(checks[k]?'✓':'')+'</button>'
+      const k=txnKey(t, 'r'+mi+'_'+i), done=checks[k];
+      const uid='cb_'+k;
+      return '<div class="settle-txn-row'+(done?' done':'')+'">'
+        +'<input type="checkbox" class="txn-cb" id="'+uid+'" data-key="'+k+'"'+(done?' checked':'')+'>'
+        +'<label class="txn-check-label" for="'+uid+'"></label>'
         +'<span class="settle-txn-name">'+(from?from.emoji+' '+from.name:'?')+'</span>'
         +'<span class="txn-amt-recv">NT$'+t.amount.toLocaleString()+'</span>'
         +'<span class="settle-tag tag-recv">還款</span>'
         +'</div>';
     }).join('');
 
-    const payRows=myPay.map(t=>{
+    const payRows=myPay.map((t,i)=>{
       const to=MEMBERS.find(x=>x.id===t.to);
-      const k=txnKey(t), done=checks[k]?'done':'', chk=checks[k]?'checked':'';
-      return '<div class="settle-txn-row '+done+'" data-key="'+k+'">'
-        +'<button class="txn-check '+chk+'" data-key="'+k+'">'+(checks[k]?'✓':'')+'</button>'
+      const k=txnKey(t, 'p'+mi+'_'+i), done=checks[k];
+      const uid='cb_'+k;
+      return '<div class="settle-txn-row'+(done?' done':'')+'">'
+        +'<input type="checkbox" class="txn-cb" id="'+uid+'" data-key="'+k+'"'+(done?' checked':'')+'>'
+        +'<label class="txn-check-label" for="'+uid+'"></label>'
         +'<span class="settle-txn-name">'+(to?to.emoji+' '+to.name:'?')+'</span>'
         +'<span class="txn-amt-pay">NT$'+t.amount.toLocaleString()+'</span>'
         +'<span class="settle-tag tag-pay">匯款</span>'
