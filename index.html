@@ -823,20 +823,33 @@ function calcTransactions(){
 const CHECKS_KEY = 'settle_checks_v1';
 function loadChecks(){ try{ return JSON.parse(localStorage.getItem(CHECKS_KEY)||'{}'); }catch{ return {}; } }
 function saveChecks(c){ localStorage.setItem(CHECKS_KEY, JSON.stringify(c)); }
-// 用 index 確保唯一性，避免相同金額造成 key 衝突
-function txnKey(t, idx){ return 'txn_'+idx+'_'+t.from+'_'+t.to; }
+// recv: r_FROM_TO  / pay: p_FROM_TO，方便連動查找
+function txnKey(t, prefix){ return prefix+'_'+t.from+'_'+t.to; }
+function pairKey(key){
+  if(key.startsWith('r_')) return 'p_'+key.slice(2);
+  if(key.startsWith('p_')) return 'r_'+key.slice(2);
+  return null;
+}
+
+function applyCheck(key, val, checks){
+  checks[key] = val;
+  const cb = document.querySelector('input.txn-cb[data-key="'+key+'"]');
+  if(cb){
+    cb.checked = val;
+    const row = cb.closest('.settle-txn-row');
+    if(row) row.classList.toggle('done', val);
+  }
+}
 
 function toggleCheck(key){
   const checks = loadChecks();
-  checks[key] = !checks[key];
-  saveChecks(checks);
-  // 直接用 key 找到對應的 checkbox 和 row
-  const cb = document.querySelector('input.txn-cb[data-key="'+key+'"]');
-  if(cb){
-    cb.checked = !!checks[key];
-    const row = cb.closest('.settle-txn-row');
-    if(row) row.classList.toggle('done', !!checks[key]);
+  const newVal = !checks[key];
+  applyCheck(key, newVal, checks);
+  const pair = pairKey(key);
+  if(pair && document.querySelector('input.txn-cb[data-key="'+pair+'"]')){
+    applyCheck(pair, newVal, checks);
   }
+  saveChecks(checks);
   updateCheckProgress();
 }
 
@@ -854,10 +867,7 @@ function updateCheckProgress(){
 function checkAll(){
   const checks = loadChecks();
   document.querySelectorAll('#settle-content .txn-cb').forEach(cb => {
-    checks[cb.dataset.key] = true;
-    cb.checked = true;
-    const row = cb.closest('.settle-txn-row');
-    if(row) row.classList.add('done');
+    applyCheck(cb.dataset.key, true, checks);
   });
   saveChecks(checks);
   updateCheckProgress();
@@ -866,10 +876,7 @@ function checkAll(){
 function uncheckAll(){
   const checks = loadChecks();
   document.querySelectorAll('#settle-content .txn-cb').forEach(cb => {
-    checks[cb.dataset.key] = false;
-    cb.checked = false;
-    const row = cb.closest('.settle-txn-row');
-    if(row) row.classList.remove('done');
+    applyCheck(cb.dataset.key, false, checks);
   });
   saveChecks(checks);
   updateCheckProgress();
@@ -895,7 +902,7 @@ function renderSettle(){
 
     const recvRows=myRecv.map((t,i)=>{
       const from=MEMBERS.find(x=>x.id===t.from);
-      const k=txnKey(t, 'r'+mi+'_'+i), done=checks[k];
+      const k=txnKey(t, 'r'), done=checks[k];
       const uid='cb_'+k;
       return '<div class="settle-txn-row'+(done?' done':'')+'">'
         +'<input type="checkbox" class="txn-cb" id="'+uid+'" data-key="'+k+'"'+(done?' checked':'')+'>'
@@ -908,7 +915,7 @@ function renderSettle(){
 
     const payRows=myPay.map((t,i)=>{
       const to=MEMBERS.find(x=>x.id===t.to);
-      const k=txnKey(t, 'p'+mi+'_'+i), done=checks[k];
+      const k=txnKey(t, 'p'), done=checks[k];
       const uid='cb_'+k;
       return '<div class="settle-txn-row'+(done?' done':'')+'">'
         +'<input type="checkbox" class="txn-cb" id="'+uid+'" data-key="'+k+'"'+(done?' checked':'')+'>'
