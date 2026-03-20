@@ -939,6 +939,16 @@ function renderSettle(){
       +'</div>';
   }).join('');
 
+  // innerHTML 重建後強制用 JS 把 checked 狀態套回去
+  // （HTML attribute 的 checked 和 JS property 的 checked 是不同的，
+  //   重建 DOM 後瀏覽器不一定會正確恢復，必須手動補上）
+  const savedChecks = loadChecks();
+  document.querySelectorAll('#settle-content .txn-cb').forEach(cb => {
+    cb.checked = !!savedChecks[cb.dataset.key];
+    const row = cb.closest('.settle-txn-row');
+    if(row) row.classList.toggle('done', cb.checked);
+  });
+
   updateCheckProgress();
 }
 
